@@ -10,4 +10,4 @@
 ##    --executor-memory 8g \
 ##    --driver-memory 8g \
 
-java -jar /home/kim/workspace/scala/aml_graph/target/scala-2.11/aml_graph-assembly-0.1.0-SNAPSHOT.jar  --input "test" --output "test"
+java -jar /home/kim/workspace/python/synthethic_AML_detection/aml_graph/target/scala-2.11/aml_graph-assembly-0.1.0-SNAPSHOT.jar  --input "/home/kim/workspace/python/synthethic_AML_detection/data/cleaned_transactions.csv" --output "/home/kim/workspace/python/synthethic_AML_detection/data/output"
