@@ -12,7 +12,7 @@ $SPARK_HOME/bin/spark-submit \
     --input "/home/kim/workspace/python/synthethic_AML_detection/data/output/data/edges" \
     --output "/home/kim/workspace/python/synthethic_AML_detection/data/output/data/node2vec" \
     --cluster --partitions 1 --dim 10 --windowsize 10 --numwalks 10 --p 1.0 --q 1.0 --weighted --degree 30 \
-    --indexed --cmd "embedding" \
+    --indexed --cmd "node2vec" \
     --nodepath "/home/kim/workspace/python/synthethic_AML_detection/data/account_names"
 
 #    --conf spark.cores.max=4 \

@@ -1,14 +1,12 @@
 package limmen.github.com.node2vec
 
 import java.io.Serializable
-import org.apache.log4j.{ Level, LogManager }
 import scala.util.Try
 import scala.collection.mutable.ArrayBuffer
 import org.slf4j.{ Logger, LoggerFactory }
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.graphx.{ EdgeTriplet, Graph, _ }
-//import limmen.github.com.node2vec.{ GraphOps, EdgeAttr, NodeAttr }
 
 case class NodeAttr(
   var neighbors: Array[(Long, Double)] = Array.empty[(Long, Double)],
@@ -31,8 +29,6 @@ object Node2vec extends Serializable {
   var randomWalkPaths: RDD[(Long, ArrayBuffer[Long])] = null
 
   def setup(context: SparkContext, param: Main.Params): this.type = {
-    LogHolderW2V.log.info("Setup inside node2vec")
-    println("Setup inside node2vec")
     this.context = context
     this.config = param
 
@@ -155,13 +151,13 @@ object Node2vec extends Serializable {
     this
   }
 
-  def embedding(sc: SparkContext, output: String): this.type = {
+  def embedding(): this.type = {
     val randomPaths = randomWalkPaths.map {
       case (vertexId, pathBuffer) =>
         Try(pathBuffer.map(_.toString).toIterable).getOrElse(null)
     }.filter(_ != null)
 
-    Word2vec.setup(context, config).fit(randomPaths, sc, output)
+    Word2vec.setup(context, config).fit(randomPaths)
 
     this
   }
@@ -303,11 +299,5 @@ object Node2vec extends Serializable {
     case (src, dst, weight) =>
       Try(Array(src, dst)).getOrElse(Array.empty[String])
   }.distinct().zipWithIndex()
-  /**
-   * Utility to make sure logger is serializable
-   */
-  object LogHolderW2V extends Serializable {
-    @transient lazy val log = LogManager.getRootLogger()
-    log.setLevel(Level.INFO)
-  }
+
 }

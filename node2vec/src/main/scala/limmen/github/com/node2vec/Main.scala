@@ -64,7 +64,7 @@ object Main {
     // Setup logging
     val log = LogManager.getRootLogger()
     log.setLevel(Level.INFO)
-    log.info(s"Starting AMLGraph")
+    log.info(s"Starting Node2vec")
 
     //Parse cmd arguments
     val conf = new Conf(args)
@@ -77,8 +77,6 @@ object Main {
     val params = Params(iter = conf.iterations(), lr = conf.lr(), numPartition = conf.partitions(), dim = conf.dim(), window = conf.windowsize(),
       walkLength = conf.walklength(), numWalks = conf.numwalks(), p = conf.p(), q = conf.q(), weighted = conf.weighted(), directed = conf.directed(),
       degree = conf.degree(), indexed = conf.indexed(), nodePath = conf.nodepath(), input = conf.input(), output = conf.output(), cmd = cmd)
-
-    log.info("created params")
 
     //Save the configuration string
     val argsStr = printArgs(conf, log)
@@ -94,38 +92,23 @@ object Main {
     val spark = SparkSession.builder().config(sparkConf).getOrCreate();
     val sc = spark.sparkContext
 
-    log.info("setup spark")
-
     val clusterStr = sc.getConf.toDebugString
     log.info(s"Cluster settings: \n" + clusterStr)
 
-    log.info("setup Node2vec")
-    println("setup Node2vec")
     Node2vec.setup(sc, params)
-    log.info("Node2vec setup complete")
-    println("Node2vec setup complete")
-    log.info(s"params cmd: ${params.cmd}")
-    println(s"params cmd: ${params.cmd}")
     params.cmd match {
       case Command.node2vec => Node2vec.load()
         .initTransitionProb()
         .randomWalk()
-        .embedding(sc, conf.output())
+        .embedding()
         .save()
       case Command.randomwalk => Node2vec.load()
         .initTransitionProb()
         .randomWalk()
         .saveRandomPath()
       case Command.embedding => {
-        log.info("command is embedding, setting up word2vec:")
-        println("command is embedding, setting up word2vec:")
-        val setup = Word2vec.setup(sc, params)
-        log.info("setup complete, reading input")
-        println("setup complete, reading input")
-        val randomPaths = setup.read(params.input)
-        log.info("got random paths from input path, start training:")
-        println("got random paths from input path, start training:")
-        Word2vec.fit(randomPaths, sc, conf.output()).save(params.output)
+        val randomPaths = Word2vec.setup(sc, params).read(params.input)
+        Word2vec.fit(randomPaths).save(params.output)
         Node2vec.loadNode2Id(params.nodePath).saveVectors()
       }
     }
