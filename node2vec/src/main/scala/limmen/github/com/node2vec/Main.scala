@@ -25,7 +25,7 @@ class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
   val directed = opt[Boolean](descr = "directed")
   val degree = opt[Int](required = true, validate = (0<), descr = "degree [30]", default = Some(30))
   val indexed = opt[Boolean](descr = "indexed")
-  val nodepath = opt[String](descr = "nodePath", default = null)
+  val nodepath = opt[String](required = false, descr = "nodePath", default = Some(null))
   val input = opt[String](required = true, descr = "input path")
   val cluster = opt[Boolean](descr = "Flag set to true means that the application is running in cluster mode, otherwise it runs locally")
   val output = opt[String](required = true, descr = "output folder path")

@@ -1,4 +1,4 @@
 --input "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/data/edges" --output "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/metadata/node_embeddings" --cluster --partitions 100 --dim 300 --windowsize 10 --numwalks 10 --p 1.0 --q 1.0 --weighted --degree 30 --indexed --cmd "node2vec" --nodepath "hdfs:///Projects/Data_Visualization_Demo/transactions/metadata/account_names"
 
 
---input "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/data/edges" --output "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/metadata/node_walks" --cluster --partitions 100 --numwalks 5 --p 1.0 --q 1.0 --weighted --degree 30 --indexed --cmd "randomwalk" --walkLength 40
+--input "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/data/edges" --output "hdfs:///Projects/Data_Visualization_Demo/transactions/graph/metadata/node_walks" --cluster --partitions 100 --numwalks 5 --p 1.0 --q 1.0 --weighted --degree 30 --indexed --cmd "randomwalk" --walklength 40
